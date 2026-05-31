@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大数据平台导出工具</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 320px;
+            min-height: 200px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
+            color: #333;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #409EFF 0%, #337ecc 100%);
+            color: white;
+            padding: 16px;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .header h1 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .header p {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 16px;
+        }
+
+        .status-card {
+            background: white;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .status-card h3 {
+            font-size: 13px;
+            color: #909399;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-value {
+            font-size: 24px;
+            font-weight: 600;
+            color: #303133;
+        }
+
+        .status-value.loading {
+            color: #409EFF;
+        }
+
+        .table-info {
+            font-size: 12px;
+            color: #606266;
+            margin-top: 4px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #67C23A 0%, #5BAF2A 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(103, 194, 58, 0.4);
+        }
+
+        .btn-primary:disabled {
+            background: #C0C4CC;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #606266;
+            border: 1px solid #DCDFE6;
+            margin-top: 8px;
+        }
+
+        .btn-secondary:hover {
+            background: #F5F7FA;
+            border-color: #409EFF;
+            color: #409EFF;
+        }
+
+        .info-section {
+            margin-top: 12px;
+            padding: 12px;
+            background: #FDF6EC;
+            border-radius: 6px;
+            border-left: 3px solid #E6A23C;
+        }
+
+        .info-section h4 {
+            font-size: 12px;
+            color: #E6A23C;
+            margin-bottom: 6px;
+        }
+
+        .info-section ul {
+            font-size: 11px;
+            color: #606266;
+            padding-left: 16px;
+        }
+
+        .info-section li {
+            margin-bottom: 4px;
+        }
+
+        .footer {
+            padding: 12px 16px;
+            text-align: center;
+            font-size: 11px;
+            color: #909399;
+            border-top: 1px solid #EBEEF5;
+        }
+
+        .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .success-icon {
+            color: #67C23A;
+        }
+
+        .error-icon {
+            color: #F56C6C;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>大数据平台数据导出工具</h1>
+        <p>即席查询数据导出助手</p>
+    </div>
+
+    <div class="content">
+        <div class="status-card">
+            <h3>
+                <span id="status-icon">📊</span>
+                当前页面状态
+            </h3>
+            <div class="status-value" id="page-status">检测中...</div>
+            <div class="table-info" id="table-info"></div>
+        </div>
+
+        <button class="btn btn-primary" id="export-btn" disabled>
+            <span>📥</span>
+            <span id="export-btn-text">导出全部数据</span>
+        </button>
+
+        <button class="btn btn-secondary" id="refresh-btn">
+            <span>🔄</span>
+            <span>刷新页面信息</span>
+        </button>
+
+        <div class="info-section">
+            <h4>使用说明</h4>
+            <ul>
+                <li>打开即席查询页面并执行查询</li>
+                <li>插件会自动检测数据表格</li>
+                <li>点击"导出全部数据"按钮导出</li>
+                <li>支持自动翻页获取所有数据</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="footer">
+        v1.0.0 | 大数据平台导出工具
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>

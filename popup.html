@@ -1,220 +1,202 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>大数据平台导出工具</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NQI导出</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --fg: #111827;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --card: #f9fafb;
+      --primary: #2563eb;
+      --primary-pressed: #1d4ed8;
+      --danger: #dc2626;
+      --shadow: 0 1px 2px rgba(0,0,0,0.06);
+      --radius: 10px;
+    }
 
-        body {
-            width: 320px;
-            min-height: 200px;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Microsoft YaHei', sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
-            color: #333;
-        }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        .header {
-            background: linear-gradient(135deg, #409EFF 0%, #337ecc 100%);
-            color: white;
-            padding: 16px;
-            text-align: center;
-            border-radius: 8px 8px 0 0;
-        }
+    body {
+      width: 220px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      padding: 10px;
+    }
 
-        .header h1 {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
+    .top {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
 
-        .header p {
-            font-size: 12px;
-            opacity: 0.9;
-        }
+    .title {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+    }
 
-        .content {
-            padding: 16px;
-        }
+    .sub {
+      font-size: 10px;
+      color: var(--muted);
+    }
 
-        .status-card {
-            background: white;
-            border-radius: 8px;
-            padding: 16px;
-            margin-bottom: 12px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-        }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 10px;
+      margin-bottom: 10px;
+    }
 
-        .status-card h3 {
-            font-size: 13px;
-            color: #909399;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
+    .big {
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
 
-        .status-value {
-            font-size: 24px;
-            font-weight: 600;
-            color: #303133;
-        }
+    .label {
+      margin-top: 6px;
+      font-size: 11px;
+      color: var(--muted);
+    }
 
-        .status-value.loading {
-            color: #409EFF;
-        }
+    .row {
+      display: flex;
+      gap: 8px;
+    }
 
-        .table-info {
-            font-size: 12px;
-            color: #606266;
-            margin-top: 4px;
-        }
+    button {
+      appearance: none;
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--fg);
+      border-radius: 9px;
+      padding: 8px 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.02s ease, background 0.15s ease, border-color 0.15s ease;
+      user-select: none;
+    }
 
-        .btn {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 6px;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
+    button:active { transform: translateY(1px); }
+    button:disabled { opacity: 0.55; cursor: not-allowed; }
 
-        .btn-primary {
-            background: linear-gradient(135deg, #67C23A 0%, #5BAF2A 100%);
-            color: white;
-        }
+    .btn-primary {
+      flex: 1;
+      border-color: rgba(37, 99, 235, 0.25);
+      background: rgba(37, 99, 235, 0.08);
+      color: var(--primary);
+    }
 
-        .btn-primary:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(103, 194, 58, 0.4);
-        }
+    .btn-primary:hover {
+      background: rgba(37, 99, 235, 0.12);
+    }
 
-        .btn-primary:disabled {
-            background: #C0C4CC;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
+    .btn-ghost {
+      flex: 1;
+      background: #fff;
+    }
 
-        .btn-secondary {
-            background: white;
-            color: #606266;
-            border: 1px solid #DCDFE6;
-            margin-top: 8px;
-        }
+    .btn-ghost:hover {
+      background: #f3f4f6;
+    }
 
-        .btn-secondary:hover {
-            background: #F5F7FA;
-            border-color: #409EFF;
-            color: #409EFF;
-        }
+    .btn-refresh {
+      width: 100%;
+      background: #fff;
+      font-weight: 500;
+      color: var(--muted);
+    }
 
-        .info-section {
-            margin-top: 12px;
-            padding: 12px;
-            background: #FDF6EC;
-            border-radius: 6px;
-            border-left: 3px solid #E6A23C;
-        }
+    .btn-refresh:hover {
+      background: #f3f4f6;
+      color: var(--fg);
+    }
 
-        .info-section h4 {
-            font-size: 12px;
-            color: #E6A23C;
-            margin-bottom: 6px;
-        }
+    .progress {
+      display: none;
+    }
 
-        .info-section ul {
-            font-size: 11px;
-            color: #606266;
-            padding-left: 16px;
-        }
+    .progress.active {
+      display: block;
+    }
 
-        .info-section li {
-            margin-bottom: 4px;
-        }
+    .progress-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 6px;
+    }
 
-        .footer {
-            padding: 12px 16px;
-            text-align: center;
-            font-size: 11px;
-            color: #909399;
-            border-top: 1px solid #EBEEF5;
-        }
+    .pct { font-size: 11px; color: var(--fg); font-variant-numeric: tabular-nums; }
+    .status { font-size: 10px; color: var(--muted); }
 
-        .spinner {
-            width: 16px;
-            height: 16px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-top-color: white;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
+    .bar {
+      height: 6px;
+      background: #e5e7eb;
+      border-radius: 999px;
+      overflow: hidden;
+    }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
+    .fill {
+      height: 100%;
+      width: 0%;
+      background: var(--primary);
+      border-radius: 999px;
+      transition: width 0.25s ease;
+    }
 
-        .success-icon {
-            color: #67C23A;
-        }
+    .hint {
+      padding: 16px 6px;
+      text-align: center;
+      font-size: 11px;
+      color: var(--muted);
+    }
 
-        .error-icon {
-            color: #F56C6C;
-        }
-    </style>
+    .hidden { display: none; }
+  </style>
 </head>
 <body>
-    <div class="header">
-        <h1>大数据平台数据导出工具</h1>
-        <p>即席查询数据导出助手</p>
+  <div class="top">
+    <div>
+      <div class="title">数据导出</div>
+      <div class="sub">NQI 即席查询</div>
+    </div>
+  </div>
+
+  <div id="no-data-view" class="hint">检测中…</div>
+
+  <div id="data-view" class="hidden">
+    <div class="card">
+      <div class="big" id="stat-total">-</div>
+      <div class="label">总记录</div>
     </div>
 
-    <div class="content">
-        <div class="status-card">
-            <h3>
-                <span id="status-icon">📊</span>
-                当前页面状态
-            </h3>
-            <div class="status-value" id="page-status">检测中...</div>
-            <div class="table-info" id="table-info"></div>
-        </div>
-
-        <button class="btn btn-primary" id="export-btn" disabled>
-            <span>📥</span>
-            <span id="export-btn-text">导出全部数据</span>
-        </button>
-
-        <button class="btn btn-secondary" id="refresh-btn">
-            <span>🔄</span>
-            <span>刷新页面信息</span>
-        </button>
-
-        <div class="info-section">
-            <h4>使用说明</h4>
-            <ul>
-                <li>打开即席查询页面并执行查询</li>
-                <li>插件会自动检测数据表格</li>
-                <li>点击"导出全部数据"按钮导出</li>
-                <li>支持自动翻页获取所有数据</li>
-            </ul>
-        </div>
+    <div class="card progress" id="progress-container">
+      <div class="progress-top">
+        <div class="pct" id="progress-percent">0%</div>
+        <div class="status" id="progress-status">…</div>
+      </div>
+      <div class="bar"><div class="fill" id="progress-fill"></div></div>
     </div>
 
-    <div class="footer">
-        v1.0.0 | 大数据平台导出工具
+    <div class="row" style="margin-bottom: 10px;">
+      <button class="btn-primary" id="export-excel-btn">Excel</button>
+      <button class="btn-ghost" id="export-csv-btn">CSV</button>
     </div>
 
-    <script src="popup.js"></script>
+    <button class="btn-refresh" id="refresh-btn">刷新</button>
+  </div>
+
+  <script src="popup.js"></script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 /**
- * 大数据平台数据导出工具 - Popup Script
+ * 大数据平台数据导出工具 - Sidebar Script (简约版)
  */
 
 (function() {
@@ -10,8 +10,8 @@
     function init() {
         bindEvents();
         checkCurrentPage();
-
-        chrome.runtime.onMessage.addListener((message) => {
+        
+        chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             if (message.action === 'dataDetected') {
                 showDataView(message.data);
             }
@@ -28,18 +28,20 @@
         try {
             const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 
-            if (!tab?.url?.includes('nqi.gmcc.net') ||
+            if (!tab?.url?.includes('nqi.gmcc.net') || 
                 (!tab.url.includes('/adhocquery') && !tab.url.includes('adhoc'))) {
                 showWaiting();
                 return;
             }
 
+            // 尝试从 storage 获取缓存
             const storage = await chrome.storage.local.get(['tableInfo']);
             if (storage.tableInfo?.rowCount > 0) {
                 showDataView(storage.tableInfo);
                 return;
             }
 
+            // 尝试获取实时数据
             try {
                 const results = await chrome.tabs.sendMessage(tab.id, { action: 'getTableInfo' });
                 if (results?.success && results.data?.rowCount > 0) {
@@ -62,6 +64,7 @@
     function showDataView(info) {
         document.getElementById('no-data-view')?.classList.add('hidden');
         document.getElementById('data-view')?.classList.remove('hidden');
+        
         document.getElementById('stat-total').textContent = formatNum(info.rowCount);
     }
 
@@ -75,7 +78,9 @@
         if (isExporting) return;
         isExporting = true;
         updateUI(true);
-        document.getElementById('progress-container')?.classList.add('active');
+
+        const prog = document.getElementById('progress-container');
+        prog?.classList.add('active');
 
         try {
             const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -99,7 +104,7 @@
                         document.getElementById('progress-percent').textContent = pct + '%';
                         document.getElementById('progress-fill').style.width = pct + '%';
                         document.getElementById('progress-fetched').textContent = formatNum(fetched);
-                        document.getElementById('progress-status').textContent = status === 'complete' ? '完成' : (status === 'error' ? '失败' : '获取中');
+                        document.getElementById('progress-status').textContent = status === 'complete' ? '完成' : '获取中';
                     }
                     if (status === 'complete' || status === 'error') {
                         isExporting = false;
@@ -117,8 +122,10 @@
     }
 
     function updateUI(loading) {
-        document.getElementById('export-excel-btn').disabled = loading;
-        document.getElementById('export-csv-btn').disabled = loading;
+        const btn1 = document.getElementById('export-excel-btn');
+        const btn2 = document.getElementById('export-csv-btn');
+        if (btn1) btn1.disabled = loading;
+        if (btn2) btn2.disabled = loading;
     }
 
     function resetUI() {

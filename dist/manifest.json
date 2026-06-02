@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "大数据平台数据导出工具",
-  "version": "1.4.1",
+  "version": "1.4.0",
   "description": "为大数据平台即席查询模块提供一键导出全部数据为Excel的功能",
   "permissions": [
     "activeTab",

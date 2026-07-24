@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NQI导出</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --fg: #111827;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --card: #f9fafb;
+      --primary: #2563eb;
+      --primary-pressed: #1d4ed8;
+      --danger: #dc2626;
+      --shadow: 0 1px 2px rgba(0,0,0,0.06);
+      --radius: 10px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      width: 220px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      padding: 10px;
+    }
+
+    .top {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .title {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+    }
+
+    .sub {
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+
+    .big {
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .label {
+      margin-top: 6px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .row {
+      display: flex;
+      gap: 8px;
+    }
+
+    button {
+      appearance: none;
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--fg);
+      border-radius: 9px;
+      padding: 8px 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.02s ease, background 0.15s ease, border-color 0.15s ease;
+      user-select: none;
+    }
+
+    button:active { transform: translateY(1px); }
+    button:disabled { opacity: 0.55; cursor: not-allowed; }
+
+    .btn-primary {
+      flex: 1;
+      border-color: rgba(37, 99, 235, 0.25);
+      background: rgba(37, 99, 235, 0.08);
+      color: var(--primary);
+    }
+
+    .btn-primary:hover {
+      background: rgba(37, 99, 235, 0.12);
+    }
+
+    .btn-ghost {
+      flex: 1;
+      background: #fff;
+    }
+
+    .btn-ghost:hover {
+      background: #f3f4f6;
+    }
+
+    .btn-refresh {
+      width: 100%;
+      background: #fff;
+      font-weight: 500;
+      color: var(--muted);
+    }
+
+    .btn-refresh:hover {
+      background: #f3f4f6;
+      color: var(--fg);
+    }
+
+    .progress {
+      display: none;
+    }
+
+    .progress.active {
+      display: block;
+    }
+
+    .progress-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 6px;
+    }
+
+    .pct { font-size: 11px; color: var(--fg); font-variant-numeric: tabular-nums; }
+    .status { font-size: 10px; color: var(--muted); }
+
+    .bar {
+      height: 6px;
+      background: #e5e7eb;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .fill {
+      height: 100%;
+      width: 0%;
+      background: var(--primary);
+      border-radius: 999px;
+      transition: width 0.25s ease;
+    }
+
+    .hint {
+      padding: 16px 6px;
+      text-align: center;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <div class="top">
+    <div>
+      <div class="title">数据导出</div>
+      <div class="sub">NQI 即席查询</div>
+    </div>
+  </div>
+
+  <div id="no-data-view" class="hint">检测中…</div>
+
+  <div id="data-view" class="hidden">
+    <div class="card">
+      <div class="big" id="stat-total">-</div>
+      <div class="label">总记录</div>
+    </div>
+
+    <div class="card progress" id="progress-container">
+      <div class="progress-top">
+        <div class="pct" id="progress-percent">0%</div>
+        <div class="status" id="progress-status">…</div>
+      </div>
+      <div class="bar"><div class="fill" id="progress-fill"></div></div>
+    </div>
+
+    <div class="row" style="margin-bottom: 10px;">
+      <button class="btn-primary" id="export-excel-btn">Excel</button>
+      <button class="btn-ghost" id="export-csv-btn">CSV</button>
+    </div>
+
+    <button class="btn-refresh" id="refresh-btn">刷新</button>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
